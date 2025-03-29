@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/navbar";
+import ApolloWrapper from "@/components/ApolloWrapper";
+import Navbar from "@/components/navbar"; // Import the wrapper
 
 export const metadata: Metadata = {
     title: "My Blog",
@@ -15,8 +16,10 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body className="min-h-screen bg-gray-100">
-        <Navbar />
-        <main className="container mx-auto p-4">{children}</main>
+        <ApolloWrapper>
+            <Navbar />
+            <main className="container mx-auto p-4">{children}</main>
+        </ApolloWrapper>
         </body>
         </html>
     );

@@ -3,23 +3,19 @@ import { gql } from "@apollo/client";
 // Fetch all posts
 export const GET_POSTS = gql`
     query GetPosts {
-        posts {
-            id
-            title
-            content
-            author
-            createdAt
-            updatedAt
-            category {
-                name
-            }
-            tags {
-                name
-            }
-            user {
-                username
-            }
+        getPosts { 
+        id
+        title
+        content
+        author
+        createdAt
+        category {
+            name
         }
+        tags {
+            name
+        }
+    }
     }
 `;
 

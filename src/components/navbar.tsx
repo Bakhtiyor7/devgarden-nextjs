@@ -2,24 +2,24 @@ import Link from "next/link";
 
 export default function Navbar() {
     return (
-        <nav className="bg-white shadow-md p-4">
+        <nav className="bg-white shadow-md p-4 w-full max-h-[75px]">
             <div className="container mx-auto flex justify-between items-center">
                 {/* Homepage Link */}
                 <Link href="/" className="text-xl font-bold text-gray-800 hover:text-blue-500 transition-colors">
-                    My Blog
+                    DevGarden
                 </Link>
 
                 {/* Right Side: Search, Write, Mypage */}
-                <div className="flex items-center space-x-6">
+                <div className="flex items-center space-x-6 row-auto">
                     {/* Search Bar */}
                     <input
                         type="text"
-                        placeholder="Search..."
-                        className="border rounded-md p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                        placeholder="Search anything"
+                        className="border rounded-[20px] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
                     />
 
                     {/* Write Icon/Link */}
-                    <Link href="/write" className="text-gray-600 hover:text-blue-500 transition-colors">
+                    <Link href="/write" className="flex items-center text-gray-600 hover:text-blue-500 transition-colors">
                         <svg
                             className="w-6 h-6"
                             fill="none"
@@ -34,6 +34,7 @@ export default function Navbar() {
                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                             />
                         </svg>
+                        <span className="ml-2">Write</span>
                     </Link>
 
                     {/* Mypage Icon/Link */}

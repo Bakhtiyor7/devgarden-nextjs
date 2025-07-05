@@ -1,4 +1,5 @@
-export default function Article({ params }: { params: { id: string } }) {
+// @ts-ignore
+export default function Article({ params /*, searchParams */  }) {
     return (
         <div>
             <h1 className="text-3xl font-bold text-gray-800 mb-4">Article {params.id}</h1>

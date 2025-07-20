@@ -9,6 +9,8 @@ export const GET_POSTS = gql`
       content
       author
       createdAt
+      image
+      updatedAt
       category {
         name
       }
@@ -29,6 +31,7 @@ export const GET_POST = gql`
       author
       createdAt
       updatedAt
+      image
       category {
         name
       }

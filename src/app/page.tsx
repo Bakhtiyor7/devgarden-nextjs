@@ -52,11 +52,7 @@ export default async function Home() {
                 <Card sx={{ maxWidth: 300 }}>
                   <CardMedia
                     component="img"
-                    height="140"
-                    image={
-                      post.image ??
-                      "https://universemagazine.com/wp-content/uploads/2022/02/fljyed2ucaessud.jpg"
-                    }
+                    image={post.image}
                     alt={post.title}
                   />
                   <CardContent>

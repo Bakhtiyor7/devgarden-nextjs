@@ -10,6 +10,7 @@ import {
   Typography,
   Container,
 } from "@mui/material";
+import Image from "next/image";
 
 // TS type matching the GET_POST result
 interface Post {
@@ -96,37 +97,34 @@ export default async function Article({
   }
 
   const post = data.getPost;
+  // title
+  // image
+  // const
+  // author
+  // createdAt
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
-      <Card>
-        {/* only render if we have a real image URL */}
-        {post.image && (
-          <CardMedia
-            component="img"
-            height="300"
-            image={post.image}
-            alt={post.title}
-          />
-        )}
-        <CardContent>
-          <Typography variant="h3" gutterBottom>
-            {post.title}
-          </Typography>
-          <Typography variant="subtitle2" color="text.secondary">
-            By {post.author} on{" "}
-            {new Intl.DateTimeFormat("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            }).format(new Date(post.createdAt))}
-          </Typography>
-          <Typography variant="body1" sx={{ mt: 2 }}>
-            {post.content}
-          </Typography>
-          {/* TODO: render category, tags, comments, etc. */}
-        </CardContent>
-      </Card>
+      <div>
+        <Typography variant="h5" sx={{ mt: 4 }}>
+          {post.title}
+        </Typography>
+        <div>
+          {post.image && (
+            <Image
+              src={post.image}
+              alt={post.title}
+              width={800}
+              height={450}
+              style={{ width: "100%", height: "auto", marginTop: "16px" }}
+            />
+          )}
+        </div>
+        <div>{post.content}</div>
+        <Typography variant="body2" color="text.secondary">
+          By {post.author} on {new Date(post.createdAt).toLocaleDateString()}
+        </Typography>
+      </div>
     </Container>
   );
 }

@@ -47,38 +47,41 @@ export default async function Home() {
       <Grid container spacing={2}>
         {posts.map((post) => (
           <Grid item xs={12} sm={4} key={post.id}>
-            <Link href={`/article/${post.id}`} passHref legacyBehavior>
-              <CardActionArea component="a" sx={{ textDecoration: "none" }}>
-                <Card sx={{ maxWidth: 300 }}>
-                  <CardMedia
-                    component="img"
-                    image={post.image}
-                    alt={post.title}
-                  />
-                  <CardContent>
-                    <Typography variant="h5" gutterBottom>
-                      {post.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {post.content.slice(0, 100)}…
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      display="block"
-                      color="text.secondary"
-                      sx={{ mt: 1 }}
-                    >
-                      By {post.author} on{" "}
-                      {new Intl.DateTimeFormat("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      }).format(new Date(post.createdAt))}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </CardActionArea>
-            </Link>
+            <CardActionArea
+              component={Link}
+              href={`/article/${post.id}`}
+              sx={{ textDecoration: "none" }}
+            >
+              <Card sx={{ maxWidth: 300 }}>
+                <CardMedia
+                  component="img"
+                  image={post.image || "/placeholder-image.jpg"} // Add fallback image
+                  alt={post.title}
+                  height="200"
+                />
+                <CardContent>
+                  <Typography variant="h5" gutterBottom>
+                    {post.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {post.content.slice(0, 100)}…
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    display="block"
+                    color="text.secondary"
+                    sx={{ mt: 1 }}
+                  >
+                    By {post.author} on{" "}
+                    {new Intl.DateTimeFormat("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    }).format(new Date(post.createdAt))}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </CardActionArea>
           </Grid>
         ))}
       </Grid>

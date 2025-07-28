@@ -3,14 +3,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import client from "@/lib/apollo-client";
 import { GET_POST } from "@/graphql/queries";
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Container,
-} from "@mui/material";
+import { Typography, Container } from "@mui/material";
 import Image from "next/image";
+import { format } from "path";
+import { formatYYYYMMDD } from "../../../../public/utils/formatDate";
 
 // TS type matching the GET_POST result
 interface Post {
@@ -122,7 +118,7 @@ export default async function Article({
         </div>
         <div>{post.content}</div>
         <Typography variant="body2" color="text.secondary">
-          By {post.author} on {new Date(post.createdAt).toLocaleDateString()}
+          By {post.author} on {formatYYYYMMDD(post.createdAt)}
         </Typography>
       </div>
     </Container>

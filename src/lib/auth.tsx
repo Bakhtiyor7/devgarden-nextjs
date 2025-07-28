@@ -74,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     username: string;
     password: string;
   }) => {
+    // TODO: use actual login mutation
     const LOGIN_MUTATION = gql`
       mutation Login($username: String!, $password: String!) {
         login(username: $username, password: $password) {

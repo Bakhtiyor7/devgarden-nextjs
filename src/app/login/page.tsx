@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 
@@ -10,11 +10,16 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  if (isSignedIn) {
-    // if already signed in, redirect home
-    router.replace("/");
-    return null;
-  }
+  // redirect if already signed in
+  // this prevents mutation error
+  useEffect(() => {
+    if (isSignedIn) {
+      router.replace("/");
+    }
+  }, [isSignedIn, router]);
+
+  // don't render the form while redirecting
+  if (isSignedIn) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

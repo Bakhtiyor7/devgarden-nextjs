@@ -7,6 +7,7 @@ import React, {
   ReactNode,
   FC,
   JSX,
+  useEffect,
 } from "react";
 import { ApolloProvider } from "@apollo/client";
 import { ApolloClient, InMemoryCache, HttpLink, gql } from "@apollo/client";
@@ -33,6 +34,14 @@ export function useAuth() {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+    } else {
+      localStorage.removeItem("token");
+    }
+  }, [token]);
 
   // HTTP link is constant
   const httpLink = useMemo(

@@ -76,22 +76,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }) => {
     // TODO: use actual login mutation
     const LOGIN_MUTATION = gql`
-      mutation Login($username: String!, $password: String!) {
-        login(username: $username, password: $password) {
-          token
+      mutation Login($authInput: AuthInput!) {
+        login(authInput: $authInput) {
+          access_token
         }
       }
     `;
 
     const { data } = await client.mutate<{
-      login: { token: string };
+      login: { access_token: string };
     }>({
       mutation: LOGIN_MUTATION,
-      variables: { username, password },
+      variables: { authInput: { username, password } },
     });
 
-    if (data?.login.token) {
-      setToken(data.login.token);
+    if (data?.login.access_token) {
+      setToken(data.login.access_token);
     }
   };
 

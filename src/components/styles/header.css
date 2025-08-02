@@ -1,0 +1,90 @@
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0a0b0e;
+}
+
+.header .container {
+  width: 1037px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: auto;
+  gap: 87px;
+  padding: 40px 0;
+}
+
+.header .container .left-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 60px;
+  height: 100%;
+  padding: 40px 0 0 0;
+}
+
+.header .container .left-container .header-title {
+  font-family: "EB Garamond", serif;
+  font-weight: 600; /* SemiBold */
+  font-size: 72px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  margin: 0;
+  width: 476px;
+
+  /* Create overlap effect */
+  position: relative;
+  z-index: 10;
+  margin-left: -10px; /* Negative margin to create overlap */
+  padding-right: 10px; /* Compensate for the negative margin */
+  box-sizing: content-box;
+  color: #f1f0dd; /* Light cream color from the image */
+}
+
+.header .container .left-container .header-subtitle {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400; /* Regular */
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  color: #f1f0ddb2;
+  max-width: 555px;
+}
+
+.header .container .left-container .write-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #41d26c;
+  color: #0f1014;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 100%;
+  border-radius: 8px;
+  padding: 32px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  width: 240px;
+  height: 52px;
+}
+
+.header .container .left-container .write-button:hover {
+  background-color: #2563eb;
+}
+
+.header .container .right-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 426px;
+  width: 474px;
+}

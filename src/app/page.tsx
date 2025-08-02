@@ -2,6 +2,7 @@
 import Link from "next/link";
 import client from "@/lib/apollo-client";
 import { GET_POSTS } from "@/graphql/queries";
+import Header from "@/components/header";
 import {
   Card,
   CardActionArea,
@@ -39,19 +40,16 @@ export default async function Home() {
   const posts = await fetchPosts();
 
   return (
-    <Container sx={{ py: 4 }}>
-      <Typography variant="h3" component="h1" gutterBottom>
-        Explore the Universe
-      </Typography>
-
-      <Grid container spacing={2}>
+    <div className="home-page">
+      <Header />
+      <div className="posts-list">
         {posts.map((post) => (
-          <Grid item xs={12} sm={4} key={post.id}>
-            <CardActionArea
-              component={Link}
-              href={`/article/${post.id}`}
-              sx={{ textDecoration: "none" }}
-            >
+          <Link
+            href={`/article/${post.id}`}
+            key={post.id}
+            style={{ textDecoration: "none" }}
+          >
+            <div className="post-card">
               <Card sx={{ maxWidth: 300 }}>
                 <CardMedia
                   component="img"
@@ -81,10 +79,10 @@ export default async function Home() {
                   </Typography>
                 </CardContent>
               </Card>
-            </CardActionArea>
-          </Grid>
+            </div>
+          </Link>
         ))}
-      </Grid>
-    </Container>
+      </div>
+    </div>
   );
 }

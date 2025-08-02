@@ -17,16 +17,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
-      <body className="min-h-screen bg-gray-100 w-full flex flex-col">
+    <html lang="en" className="">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin=""
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="">
         {/* collect & stream MUI styles server-side */}
         <AppRouterCacheProvider>
           <Providers>
             <ThemeRegistry>
               <Navbar />
-              <main className="container mx-auto max-w-screen-lg p-4 flex-grow">
-                {children}
-              </main>
+              <main className="">{children}</main>
             </ThemeRegistry>
           </Providers>
         </AppRouterCacheProvider>

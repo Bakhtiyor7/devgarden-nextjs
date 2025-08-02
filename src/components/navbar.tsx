@@ -78,16 +78,32 @@ export default function Navbar() {
               </svg>
             </Link>
           ) : null}
-          <Link href="/login" className="text-sm text-blue-500 hover:underline">
-            Login
-          </Link>
-          <Link
-            href="/"
-            onClick={handleLogout}
-            className="text-sm text-red-600 hover:underline"
-          >
-            Logout
-          </Link>
+          {isSignedIn ? null : (
+            <>
+              <Link
+                href="/signup"
+                className="text-sm text-gray-900 hover:underline"
+              >
+                Signup
+              </Link>
+              <Link
+                href="/login"
+                className="text-sm text-blue-500 hover:underline"
+              >
+                Login
+              </Link>
+            </>
+          )}
+
+          {isSignedIn ? (
+            <Link
+              href="/"
+              onClick={handleLogout}
+              className="text-sm text-red-600 hover:underline"
+            >
+              Logout
+            </Link>
+          ) : null}
         </div>
       </div>
     </nav>

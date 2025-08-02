@@ -2,9 +2,12 @@
 import { useAuth } from "@/lib/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import "./styles/navbar.css"
+import Image from "next/image";
+
 
 export default function Navbar() {
-  const { isSignedIn, signOut, signIn } = useAuth();
+  const { isSignedIn, signOut } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -15,29 +18,29 @@ export default function Navbar() {
     router.push("/");
   };
   return (
-    <nav className="bg-white shadow-md p-4 w-full max-h-[75px]">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav className="navbar">
+      <div className="container">
         {/* Homepage Link */}
         <Link
           href="/"
           className="text-xl font-bold text-gray-800 hover:text-blue-500 transition-colors"
         >
-          DevGarden
+          <Image src="/logo.png" alt="project logo" width={121} height={40}/>
         </Link>
 
         {/* Right Side: Search, Write, Mypage */}
         <div className="flex items-center space-x-6 row-auto">
           {/* Search Bar */}
-          <input
-            type="text"
-            placeholder="Search anything"
-            className="border rounded-[20px] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
-          />
+          {/*<input*/}
+          {/*  type="text"*/}
+          {/*  placeholder="Search anything"*/}
+          {/*  className="border rounded-[20px] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"*/}
+          {/*/>*/}
 
           {/* Write Icon/Link */}
           <Link
             href="/write"
-            className="flex items-center text-gray-600 hover:text-blue-500 transition-colors"
+            className="flex items-center text-white hover:text-blue-500 transition-colors"
           >
             <svg
               className="w-6 h-6"
@@ -60,7 +63,7 @@ export default function Navbar() {
           {isSignedIn ? (
             <Link
               href="/mypage"
-              className="text-gray-600 hover:text-blue-500 transition-colors"
+              className="text-white hover:text-blue-500 transition-colors"
             >
               <svg
                 className="w-6 h-6"
@@ -79,27 +82,27 @@ export default function Navbar() {
             </Link>
           ) : null}
           {isSignedIn ? null : (
-            <>
+            <div className={"login-btn-container"}>
               <Link
                 href="/signup"
-                className="text-sm text-gray-900 hover:underline"
+                className="signup-btn"
               >
                 Signup
               </Link>
               <Link
                 href="/login"
-                className="text-sm text-blue-500 hover:underline"
+                className="login-btn"
               >
                 Login
               </Link>
-            </>
+            </div>
           )}
 
           {isSignedIn ? (
             <Link
               href="/"
               onClick={handleLogout}
-              className="text-sm text-red-600 hover:underline"
+              className="text-sm text-blue-500 hover:underline"
             >
               Logout
             </Link>

@@ -21,16 +21,19 @@ const Header = () => {
             height={426}
             priority
             alt="header-image"
-            style={{ objectFit: "contain" }}
+            style={{
+              objectFit: "contain",
+              transform: "translateX(65px)", // Move the image 50px to the right
+            }}
           />
           <img
             src="/glitch.gif"
             alt="glitch-overlay"
             style={{
               position: "absolute",
-              top: "200px", // Fine-tuned to match the screen position
-              left: "180px", // Fine-tuned to center on the screen
-              width: "112px", // Match the GIF's actual dimensions
+              top: "195px", // Fine-tuned to match the screen position
+              left: "228px", // Fine-tuned to center on the screen
+              width: "105px", // Match the GIF's actual dimensions
               height: "77px", // Match the GIF's actual dimensions
               pointerEvents: "none",
               opacity: 0.7, // Make it semi-transparent for better blending

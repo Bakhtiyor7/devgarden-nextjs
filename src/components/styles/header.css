@@ -31,20 +31,12 @@
   font-size: 72px;
   line-height: 120%;
   letter-spacing: 0%;
-  max-width: 100%;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
-  margin: 0;
-  width: 476px;
-
-  /* Create overlap effect */
+  max-width: none; /* Remove width restriction */
+  width: 550px; /* Make the title wider */
   position: relative;
-  z-index: 10;
-  margin-left: -10px; /* Negative margin to create overlap */
-  padding-right: 10px; /* Compensate for the negative margin */
-  box-sizing: content-box;
-  color: #f1f0dd; /* Light cream color from the image */
+  /* Move it slightly to the right */
+  overflow: visible; /* Allow it to extend beyond the container */
+  margin: 0;
 }
 
 .header .container .left-container .header-subtitle {

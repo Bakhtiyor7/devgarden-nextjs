@@ -42,35 +42,65 @@ export default async function Home() {
 
   return (
     <div className="home-page">
-      <div className={"wrapper"}>
+      <div className={"homepage-wrapper"}>
         <Header />
-        <div className="posts-list">
-          {posts.map((post) => (
-            <Link
-              href={`/article/${post.id}`}
-              key={post.id}
-              style={{ textDecoration: "none" }}
-            >
-              <div className="post-card">
-                <Card sx={{ maxWidth: 300 }}>
+        <div className="posts-container">
+          <div className={"categories"}>Category</div>
+          <div className="posts-list">
+            {posts.map((post) => (
+              <Link
+                href={`/article/${post.id}`}
+                key={post.id}
+                style={{ textDecoration: "none" }}
+              >
+                <Card
+                  sx={{
+                    width: "1037px",
+                    height: "394px",
+                    borderRadius: "12px",
+                    border: "1px solid #333336",
+                    padding: "40px",
+                    backgroundColor: "#0F1014",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "space-between",
+                    gap: "50px",
+                    "&:hover": {
+                      transform: "translateY(-2px)",
+                      transition: "transform 0.2s ease-in-out",
+                    },
+                  }}
+                >
                   <CardMedia
                     component="img"
-                    image={post.image || "/placeholder-image.jpg"} // Add fallback image
+                    image={post.image || "/placeholder-image.jpg"}
                     alt={post.title}
-                    height="200"
+                    sx={{
+                      width: "314px",
+                      height: "100%",
+                      objectFit: "cover",
+                      borderRadius: "8px",
+                    }}
                   />
-                  <CardContent>
-                    <Typography variant="h5" gutterBottom>
-                      {post.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {post.content.slice(0, 100)}…
-                    </Typography>
+                  <CardContent
+                    sx={{
+                      width: "536px",
+                      flex: 1,
+                      padding: 0,
+                      "&:last-child": { paddingBottom: 0 },
+                      display: "flex",
+                      flexDirection: "column",
+                      // justifyContent: "space-between",
+                    }}
+                  >
                     <Typography
                       variant="caption"
                       display="block"
-                      color="text.secondary"
-                      sx={{ mt: 1 }}
+                      sx={{
+                        color: "#666666",
+                        fontSize: "14px",
+                        marginBottom: "32px",
+                      }}
                     >
                       By {post.author} on{" "}
                       {new Intl.DateTimeFormat("en-US", {
@@ -79,11 +109,34 @@ export default async function Home() {
                         day: "numeric",
                       }).format(new Date(post.createdAt))}
                     </Typography>
+                    <div>
+                      <Typography
+                        variant="h5"
+                        gutterBottom
+                        sx={{
+                          color: "#FFFFFF",
+                          fontWeight: 600,
+                          marginBottom: "16px",
+                        }}
+                      >
+                        {post.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "#A3A3A3",
+                          lineHeight: 1.6,
+                          marginBottom: "24px",
+                        }}
+                      >
+                        {post.content.slice(0, 150)}…
+                      </Typography>
+                    </div>
                   </CardContent>
                 </Card>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </div>

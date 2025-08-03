@@ -1,6 +1,7 @@
 .header {
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #0a0b0e;
@@ -13,16 +14,16 @@
   justify-content: space-between;
   height: auto;
   gap: 87px;
-  padding: 40px 0;
+  padding-top: 40px;
 }
 
 .header .container .left-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 60px;
+  /* gap: 60px; */
   height: 100%;
-  padding: 40px 0 0 0;
+  padding-top: 40px;
 }
 
 .header .container .left-container .header-title {
@@ -47,6 +48,7 @@
   letter-spacing: 0%;
   color: #f1f0ddb2;
   max-width: 555px;
+  padding-bottom: 60px;
 }
 
 .header .container .left-container .write-button {
@@ -77,6 +79,19 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 426px;
+  height: auto;
   width: 474px;
+}
+
+.header .header-bottom {
+  width: 1280px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    180deg,
+    #0f1014 -26.83%,
+    rgba(63, 67, 84, 0) 100%
+  );
 }

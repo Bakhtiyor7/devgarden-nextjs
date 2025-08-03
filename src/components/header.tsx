@@ -42,6 +42,7 @@ const Header = () => {
           />
         </div>
       </div>
+      <div className="header-bottom"></div>
     </div>
   );
 };

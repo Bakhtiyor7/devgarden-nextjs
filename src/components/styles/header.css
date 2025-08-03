@@ -5,6 +5,17 @@
   justify-content: center;
   align-items: center;
   background-color: #0a0b0e;
+  margin: 0;
+  padding: 0;
+}
+
+.header .wrapper {
+  max-width: 1280px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .header .container {
@@ -84,7 +95,8 @@
 }
 
 .header .header-bottom {
-  width: 1280px;
+  width: 100%;
+  max-width: 1037px;
   height: 60px;
   display: flex;
   justify-content: center;

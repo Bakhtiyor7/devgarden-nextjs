@@ -32,8 +32,8 @@ const Header = () => {
               alt="glitch-overlay"
               style={{
                 position: "absolute",
-                top: "195px", // Fine-tuned to match the screen position
-                left: "228px", // Fine-tuned to center on the screen
+                top: "178px", // Fine-tuned to match the screen position
+                left: "230px", // Fine-tuned to center on the screen
                 width: "105px", // Match the GIF's actual dimensions
                 height: "77px", // Match the GIF's actual dimensions
                 pointerEvents: "none",

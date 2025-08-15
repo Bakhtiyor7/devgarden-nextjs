@@ -2,9 +2,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/navbar";
+import HydrationFix from "@/components/HydrationLogger";
 import ThemeRegistry from "@/components/ThemeRegistry";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { Providers } from "@/app/providers";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "My Blog",
@@ -17,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="">
+    <html lang="en">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -30,13 +32,14 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="">
-        {/* collect & stream MUI styles server-side */}
+      <body suppressHydrationWarning>
         <AppRouterCacheProvider>
           <Providers>
             <ThemeRegistry>
               <Navbar />
-              <main className="">{children}</main>
+              <HydrationFix />
+              <main>{children}</main>
+              <Footer />
             </ThemeRegistry>
           </Providers>
         </AppRouterCacheProvider>

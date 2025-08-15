@@ -3,6 +3,8 @@
 :root {
   --background: #0f1014;
   /* --foreground: #171717; */
+
+  --border-green-primary: #64da87;
   background-color: #0f1014;
 }
 

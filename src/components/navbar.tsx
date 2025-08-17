@@ -43,7 +43,7 @@ export default function Navbar() {
               className="flex items-center text-white hover:text-blue-500 transition-colors"
             >
               {/* <span className="ml-2">Write</span> */}
-              <Image src="/write.png" alt="Write" width={24} height={24} />
+              <Image src="/write.png" alt="Write" width={26} height={26} />
             </Link>
 
             {/* Mypage Icon/Link */}
@@ -52,7 +52,15 @@ export default function Navbar() {
                 href="/mypage"
                 className="text-white hover:text-blue-500 transition-colors"
               >
-                <Image src="/mypage.png" alt="My Page" width={24} height={24} />
+                <div className="flex items-center border border-gray-300 rounded-full p-0 hover:bg-gray-700 transition-colors cursor-pointer w-10 h-10">
+                  <Image
+                    src="/profile-img.jpg"
+                    alt="My Page"
+                    width={40}
+                    height={40}
+                    className="rounded-full w-full h-full object-cover"
+                  />
+                </div>
               </Link>
             ) : null}
             {isSignedIn ? null : (

@@ -10,6 +10,7 @@ module.exports = {
       fontFamily: {
         garamond: ["EB Garamond", "serif"],
         "press-start": ['"Press Start 2P"', "cursive"],
+        dunggeunmo: ["var(--font-dunggeunmo)"],
       },
     },
   },

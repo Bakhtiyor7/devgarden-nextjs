@@ -32,10 +32,10 @@ const Header = () => {
               alt="glitch-overlay"
               style={{
                 position: "absolute",
-                top: "178px", // Fine-tuned to match the screen position
-                left: "190px", // Adjusted for the new padding
-                width: "105px", // Match the GIF's actual dimensions
-                height: "77px", // Match the GIF's actual dimensions
+                top: "215px", // Fine-tuned to match the screen position
+                left: "225px", // Adjusted to match the image's new position
+                width: "115px", // Match the GIF's actual dimensions
+                height: "80px", // Match the GIF's actual dimensions
                 pointerEvents: "none",
                 opacity: 0.7, // Make it semi-transparent for better blending
                 mixBlendMode: "screen", // Blend mode for better transparency effect

@@ -1,4 +1,13 @@
 "use client";
+import React from "react";
+import localFont from "next/font/local";
+
+const dg = localFont({
+  src: "../../src/fonts/DungGeunMo.ttf", // adjust path if needed
+  weight: "400",
+  style: "normal",
+  display: "swap",
+});
 
 interface CategoryButtonProps {
   children: React.ReactNode;
@@ -12,7 +21,7 @@ export default function CategoryButton({
   return (
     <button
       onClick={onClick}
-      className="text-gray-600 press-start rounded-full text-base transition-all duration-200 w-auto hover:border-[#64DA87] px-4 py-2 active:text-[#64DA87]"
+      className={`${dg.className} text-gray-600 rounded-full text-[32px] transition-all duration-200 w-auto hover:border-[#64DA87] px-4 py-2 active:text-[#64DA87]`}
     >
       {children}
     </button>

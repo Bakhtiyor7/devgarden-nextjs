@@ -7,6 +7,7 @@ import ThemeRegistry from "@/components/ThemeRegistry";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { Providers } from "@/app/providers";
 import Footer from "@/components/Footer";
+import { dunggeunmo } from "./fonts";
 
 export const metadata: Metadata = {
   title: "My Blog",
@@ -32,7 +33,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body suppressHydrationWarning>
+      <body className={dunggeunmo.variable} suppressHydrationWarning>
         <AppRouterCacheProvider>
           <Providers>
             <ThemeRegistry>

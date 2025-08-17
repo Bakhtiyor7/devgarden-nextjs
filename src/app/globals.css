@@ -1,29 +1,11 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "DungGeunMo";
-  src:
-    url("/fonts/DungGeunMo.woff2") format("woff2"),
-    url("/fonts/DungGeunMo.woff") format("woff"),
-    url("/fonts/DungGeunMo.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root {
   --background: #0f1014;
   /* --foreground: #171717; */
 
   --border-green-primary: #64da87;
   background-color: #0f1014;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -53,4 +35,8 @@ body {
     "Segoe UI Symbol",
     sans-serif;
   font-weight: 400; /* the only weight for this font */
+}
+
+.dunggeunmo {
+  font-family: var(--font-dunggeunmo), monospace;
 }

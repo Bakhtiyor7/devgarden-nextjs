@@ -1,6 +1,14 @@
 import React from "react";
 import Image from "next/image";
 import "./styles/header.css"; // Import the CSS file for styling
+import localFont from "next/font/local";
+
+const dg = localFont({
+  src: "../fonts/DungGeunMo.ttf", // adjust path if needed
+  weight: "400",
+  style: "normal",
+  display: "swap",
+});
 
 const Header = () => {
   return (
@@ -8,7 +16,9 @@ const Header = () => {
       <div className={"wrapper"}>
         <div className={"container"}>
           <div className={"left-container"}>
-            <div className="header-title">Where Bugs Turn Into Butterflies</div>
+            <div className={`${dg.className} header-title`}>
+              Where Bugs Turn Into Butterflies
+            </div>
             <div className="header-subtitle">
               Dev Garden turns your thoughts into a growing knowledge garden.
               Write, learn, and collaborate—one post at a time.

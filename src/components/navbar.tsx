@@ -40,12 +40,17 @@ export default function Navbar() {
             {/* Write Icon/Link */}
             <Link
               href="/write"
-              className="flex items-center text-white hover:text-blue-500 transition-colors"
+              className="flex items-center justify-center text-[#41D26C] transition-colors border border-[#41D26C] w-[130px] h-[40px] px-6 py-2 rounded-md"
             >
-              {/* <span className="ml-2">Write</span> */}
-              <Image src="/write.png" alt="Write" width={26} height={26} />
+              <Image
+                src="/write.png"
+                alt="Write"
+                width={24}
+                height={24}
+                className="write-icon"
+              />
+              <span className="ml-2 text-[#41D26C]">Write</span>
             </Link>
-
             {/* Mypage Icon/Link */}
             {isSignedIn ? (
               <Link

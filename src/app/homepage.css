@@ -14,11 +14,10 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding-bottom: 60px;
+  padding: 0 50px 60px 50px;
 }
 
 .home-page .homepage-wrapper .posts-container {
-  max-width: 1037px;
   width: 100%;
   height: auto;
   display: flex;

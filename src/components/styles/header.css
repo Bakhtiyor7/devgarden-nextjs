@@ -16,10 +16,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 0 50px; /* Added 50px padding on sides */
 }
 
 .header .container {
-  width: 1037px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -95,8 +96,7 @@
 }
 
 .header .header-bottom {
-  width: 100vw;
-
+  width: 100%;
   height: 60px;
   display: flex;
   justify-content: center;

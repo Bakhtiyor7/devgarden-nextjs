@@ -24,7 +24,7 @@ const Header = () => {
               alt="header-image"
               style={{
                 objectFit: "contain",
-                transform: "translateX(65px)", // Move the image 50px to the right
+                transform: "translateX(25px)", // Adjusted for the new padding
               }}
             />
             <img
@@ -33,7 +33,7 @@ const Header = () => {
               style={{
                 position: "absolute",
                 top: "178px", // Fine-tuned to match the screen position
-                left: "230px", // Fine-tuned to center on the screen
+                left: "190px", // Adjusted for the new padding
                 width: "105px", // Match the GIF's actual dimensions
                 height: "77px", // Match the GIF's actual dimensions
                 pointerEvents: "none",

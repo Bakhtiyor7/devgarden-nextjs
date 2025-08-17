@@ -22,13 +22,12 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-
+  padding: 0 50px;
   background-color: #0a0b0e;
 }
 
 .navbar .container {
   width: 100%;
-  max-width: 1037px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

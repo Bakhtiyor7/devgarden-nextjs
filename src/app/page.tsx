@@ -61,7 +61,7 @@ export default async function Home() {
               >
                 <Card
                   sx={{
-                    width: "1037px",
+                    width: "100%",
                     height: "394px",
                     borderRadius: "12px",
                     border: "1px solid #333336",
@@ -90,7 +90,6 @@ export default async function Home() {
                   />
                   <CardContent
                     sx={{
-                      width: "536px",
                       flex: 1,
                       padding: 0,
                       "&:last-child": { paddingBottom: 0 },

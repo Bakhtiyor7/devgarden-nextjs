@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "DungGeunMo";
+  src:
+    url("/fonts/DungGeunMo.woff2") format("woff2"),
+    url("/fonts/DungGeunMo.woff") format("woff"),
+    url("/fonts/DungGeunMo.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #0f1014;
   /* --foreground: #171717; */
@@ -26,4 +37,20 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.press-start {
+  font-family:
+    "Press Start 2P",
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Helvetica,
+    Arial,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    sans-serif;
+  font-weight: 400; /* the only weight for this font */
 }

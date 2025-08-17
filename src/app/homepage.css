@@ -1,6 +1,6 @@
 .home-page {
   display: flex;
-  width: 100%;
+  width: 100vw;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -37,4 +37,17 @@
   justify-content: center;
   align-items: center;
   gap: 30px;
+}
+
+.category-button {
+  color: #ffffff;
+  border-radius: 9999px;
+  font-size: 32px;
+  font-weight: 400;
+  transition: all 0.2s;
+  width: auto;
+}
+
+.category-button:hover {
+  border-color: #64da87;
 }

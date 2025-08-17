@@ -29,7 +29,7 @@ export default function Navbar() {
           </Link>
 
           {/* Right Side: Search, Write, Mypage */}
-          <div className="flex items-center space-x-6 row-auto">
+          <div className="flex items-center space-x-6 row-auto suppressHydrationWarning">
             {/* Search Bar */}
             {/*<input*/}
             {/*  type="text"*/}
@@ -42,21 +42,8 @@ export default function Navbar() {
               href="/write"
               className="flex items-center text-white hover:text-blue-500 transition-colors"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                />
-              </svg>
-              <span className="ml-2">Write</span>
+              {/* <span className="ml-2">Write</span> */}
+              <Image src="/write.png" alt="Write" width={24} height={24} />
             </Link>
 
             {/* Mypage Icon/Link */}
@@ -65,20 +52,7 @@ export default function Navbar() {
                 href="/mypage"
                 className="text-white hover:text-blue-500 transition-colors"
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
+                <Image src="/mypage.png" alt="My Page" width={24} height={24} />
               </Link>
             ) : null}
             {isSignedIn ? null : (

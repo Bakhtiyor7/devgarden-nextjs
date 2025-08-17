@@ -13,6 +13,7 @@ import {
   Container,
 } from "@mui/material";
 import "./homepage.css";
+import CategoryButton from "@/components/CategoryButton";
 
 // Type for posts returned by GET_POSTS
 interface Post {
@@ -45,7 +46,12 @@ export default async function Home() {
       <div className={"homepage-wrapper"}>
         <Header />
         <div className="posts-container">
-          <div className={"categories"}>Category</div>
+          <div className="w-auto flex flex-row gap-[32px]">
+            <CategoryButton>Category1</CategoryButton>
+            <CategoryButton>Category2</CategoryButton>
+            <CategoryButton>Category3</CategoryButton>
+            <CategoryButton>Category4</CategoryButton>
+          </div>
           <div className="posts-list">
             {posts.map((post) => (
               <Link

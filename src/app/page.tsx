@@ -57,7 +57,11 @@ export default async function Home() {
               <Link
                 href={`/article/${post.id}`}
                 key={post.id}
-                style={{ textDecoration: "none" }}
+                style={{
+                  textDecoration: "none",
+                  width: "100%",
+                  display: "block",
+                }}
               >
                 <Card
                   sx={{
@@ -69,8 +73,9 @@ export default async function Home() {
                     backgroundColor: "#0F1014",
                     display: "flex",
                     flexDirection: "row",
-                    alignItems: "space-between",
+                    alignItems: "center",
                     gap: "50px",
+                    boxSizing: "border-box",
                     "&:hover": {
                       transform: "translateY(-2px)",
                       transition: "transform 0.2s ease-in-out",
@@ -83,7 +88,8 @@ export default async function Home() {
                     alt={post.title}
                     sx={{
                       width: "314px",
-                      height: "100%",
+                      height: "314px",
+                      minWidth: "314px",
                       objectFit: "cover",
                       borderRadius: "8px",
                     }}
@@ -95,7 +101,8 @@ export default async function Home() {
                       "&:last-child": { paddingBottom: 0 },
                       display: "flex",
                       flexDirection: "column",
-                      // justifyContent: "space-between",
+                      height: "100%",
+                      justifyContent: "space-between",
                     }}
                   >
                     <Typography

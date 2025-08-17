@@ -35,6 +35,18 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
 
+  // Load token from localStorage on mount
+  useEffect(() => {
+    // Only access localStorage on the client side
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        setToken(storedToken);
+      }
+    }
+  }, []);
+
+  // Save token to localStorage when it changes
   useEffect(() => {
     if (token) {
       localStorage.setItem("token", token);

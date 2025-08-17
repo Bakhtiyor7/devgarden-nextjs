@@ -1,111 +1,111 @@
 .header {
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #0a0b0e;
-  margin: 0;
-  padding: 0;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #0a0b0e;
+    margin: 0;
+    padding: 0;
 }
 
 .header .wrapper {
-  max-width: 1280px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0 50px; /* Added 50px padding on sides */
+    max-width: 1280px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 50px; /* Added 50px padding on sides */
 }
 
 .header .container {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  height: auto;
-  gap: 87px;
-  padding-top: 40px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: auto;
+    gap: 87px;
+    padding-top: 40px;
 }
 
 .header .container .left-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  /* gap: 60px; */
-  height: 100%;
-  padding-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* gap: 60px; */
+    height: 100%;
+    padding-top: 40px;
 }
 
 .header .container .left-container .header-title {
-  font-family: "EB Garamond", serif;
-  font-weight: 600; /* SemiBold */
-  font-size: 72px;
-  line-height: 120%;
-  letter-spacing: 0%;
-  max-width: none; /* Remove width restriction */
-  width: 550px; /* Make the title wider */
-  position: relative;
-  /* Move it slightly to the right */
-  overflow: visible; /* Allow it to extend beyond the container */
-  margin: 0;
+    font-family: 'EB Garamond', serif;
+    font-weight: 600; /* SemiBold */
+    font-size: 72px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    max-width: none; /* Remove width restriction */
+    width: 550px; /* Make the title wider */
+    position: relative;
+    /* Move it slightly to the right */
+    overflow: visible; /* Allow it to extend beyond the container */
+    margin: 0;
 }
 
 .header .container .left-container .header-subtitle {
-  font-family: "Roboto", sans-serif;
-  font-weight: 400; /* Regular */
-  font-size: 20px;
-  line-height: 120%;
-  letter-spacing: 0%;
-  color: #f1f0ddb2;
-  max-width: 555px;
-  padding-bottom: 60px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400; /* Regular */
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    color: #f1f0ddb2;
+    max-width: 555px;
+    padding-bottom: 60px;
 }
 
 .header .container .left-container .write-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #41d26c;
-  color: #0f1014;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 100%;
-  border-radius: 8px;
-  padding: 32px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #41d26c;
+    color: #0f1014;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 100%;
+    border-radius: 8px;
+    padding: 32px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
 
-  width: 240px;
-  height: 52px;
+    width: 240px;
+    height: 52px;
 }
 
 .header .container .left-container .write-button:hover {
-  background: #3ec766;
+    background: #3ec766;
 }
 
 .header .container .left-container .write-button:active {
-  background: #3cc264;
+    background: #3cc264;
 }
 
 .header .container .right-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: auto;
-  width: 474px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: 474px;
 }
 
 .header .header-bottom {
-  width: 100%;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* background: linear-gradient(
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background: linear-gradient(
     180deg,
     #0f1014 -26.83%,
     rgba(63, 67, 84, 0) 100%

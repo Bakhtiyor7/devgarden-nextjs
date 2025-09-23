@@ -21,6 +21,7 @@ interface Post {
 async function fetchPosts(): Promise<Post[]> {
     const { data, errors } = await client.query<{ getPosts: Post[] }>({
         query: GET_POSTS,
+        fetchPolicy: 'no-cache',
         errorPolicy: 'all',
     })
 

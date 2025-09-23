@@ -6,6 +6,7 @@ import { GET_POST } from '@/graphql/queries'
 import Image from 'next/image'
 import { formatYYYYMMDD } from '../../../../public/utils/formatDate'
 import Link from 'next/link'
+import { toExcerpt } from '@/utils/commonUtils'
 
 // TS type matching the GET_POST result
 interface Post {
@@ -158,11 +159,13 @@ export default async function Article({
 
                     {/* Content */}
                     <div className="text-[#A3A3A3] leading-relaxed text-lg whitespace-pre-wrap">
-                        {post.content.split('\n').map((paragraph, index) => (
-                            <p key={index} className="mb-6">
-                                {paragraph}
-                            </p>
-                        ))}
+                        {toExcerpt(post.content)
+                            .split('\n')
+                            .map((paragraph, index) => (
+                                <p key={index} className="mb-6">
+                                    {paragraph}
+                                </p>
+                            ))}
                     </div>
 
                     {/* Tags */}

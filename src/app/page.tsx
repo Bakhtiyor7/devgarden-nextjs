@@ -7,6 +7,7 @@ import Image from 'next/image'
 import './homepage.css'
 import CategoryFilter from '@/components/CategoryFilter'
 import PostCard from '@/components/PostCard'
+import { stripHtml, toExcerpt } from '@/utils/commonUtils'
 
 // Type for posts returned by GET_POSTS
 interface Post {
@@ -54,7 +55,7 @@ export default async function Home() {
                                 key={post.id}
                                 id={post.id}
                                 title={post.title}
-                                content={post.content}
+                                content={toExcerpt(post.content)}
                                 author={post.author}
                                 createdAt={post.createdAt}
                                 image={post.image}

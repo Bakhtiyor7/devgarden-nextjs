@@ -3,10 +3,33 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import TipTapEditor from '@/components/TipTapEditor'
+import { useAuth } from '@/lib/auth'
+import { useMutation } from '@apollo/client'
+import { CREATE_POST } from '@/graphql/queries'
 
 export default function Write() {
+    const { user } = useAuth()
     const titleRef = useRef<HTMLInputElement>(null)
     const [content, setContent] = useState('')
+    const [category, setCategory] = useState<string>('')
+    const [tagInput, setTagInput] = useState<string>('')
+    const [tags, setTags] = useState<string[]>([])
+    const [image, setImage] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
+
+    const [createPost, { loading: mutationLoading }] = useMutation(CREATE_POST)
+
+    const handleAddTag = () => {
+        if (tagInput && !tags.includes(tagInput)) {
+            setTags([...tags, tagInput])
+            setTagInput('')
+        }
+    }
+
+    const handleRemoveTag = (tag: string) => {
+        setTags(tags.filter((t) => t !== tag))
+    }
 
     const handlePublish = async () => {
         const title = titleRef.current?.value
@@ -16,16 +39,41 @@ export default function Write() {
             return
         }
 
-        // TODO: make api call
-        // handle image upload
+        setLoading(true)
+        setError('')
 
-        // Here you would typically make an API call to publish the post
-        console.log('Publishing post:', { title, content })
-        alert('Post published successfully!')
+        try {
+            const tagInputs = tags.map((tag) => ({ name: tag }))
 
-        // Clear the form or redirect
-        if (titleRef.current) titleRef.current.value = ''
-        setContent('')
+            const { data } = await createPost({
+                variables: {
+                    input: {
+                        title,
+                        content,
+                        author: user?.username || 'Anonymous',
+                        image,
+                        categoryName: category,
+                        tags: tagInputs,
+                    },
+                },
+            })
+
+            // Show success message
+            alert('Post published successfully!')
+
+            // Redirect to the article page if we have an ID
+            if (data?.createPost?.id) {
+                window.location.href = `/article/${data.createPost.id}`
+            } else {
+                // Otherwise redirect to home
+                window.location.href = '/'
+            }
+        } catch (error) {
+            console.error('Error creating post:', error)
+            setError('Failed to publish post. Please try again.')
+        } finally {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -39,7 +87,16 @@ export default function Write() {
         return () => {
             window.removeEventListener('publishPost', handlePublishEvent)
         }
-    }, [content])
+    }, [content, category, tags, image])
+
+    const categories = [
+        'Technology',
+        'Design',
+        'Programming',
+        'Tutorial',
+        'Career',
+        'DevOps',
+    ]
 
     return (
         <ProtectedRoute>
@@ -75,14 +132,92 @@ export default function Write() {
                                     placeholder="Start writing your amazing content..."
                                 />
                             </div>
-                        </div>
 
-                        {/* <div className="flex justify-end">
+                            {/* category selector */}
+                            <div className="mb-8">
+                                <label className="block text-[#A3A3A3] mb-2">
+                                    Category
+                                </label>
+                                <select
+                                    value={category}
+                                    onChange={(e) =>
+                                        setCategory(e.target.value)
+                                    }
+                                    className="bg-[#1a1a1a] text-white border border-[#333336] rounded-lg px-4 py-2 w-full focus:outline-none focus:border-[#64da87]"
+                                >
+                                    <option value="">Select a category</option>
+                                    {categories.map((cat) => (
+                                        <option key={cat} value={cat}>
+                                            {cat}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Tags input */}
+                            <div className="mb-8">
+                                <label className="block text-[#A3A3A3] mb-2">
+                                    Tags
+                                </label>
+                                <div className="flex flex-row items-center">
+                                    <input
+                                        type="text"
+                                        value={tagInput}
+                                        onChange={(e) =>
+                                            setTagInput(e.target.value)
+                                        }
+                                        onKeyDown={(e) =>
+                                            e.key === 'Enter' && handleAddTag()
+                                        }
+                                        placeholder="Add tag and press Enter"
+                                        className="flex-1 bg-[#1a1a1a] text-white border border-[#333336] rounded-lg px-4 py-2 focus:outline-none focus:border-[#64da87]"
+                                    />
+                                    <button
+                                        onClick={handleAddTag}
+                                        className="ml-2 bg-[#1a1a1a] text-white border border-[#333336] rounded-lg px-4 py-2 hover:bg-[#333336]"
+                                    >
+                                        Add Tag
+                                    </button>
+                                </div>
+
+                                {/* Tags display */}
+                                {tags.length > 0 && (
+                                    <div className="flex flex-row flex-wrap gap-2 mt-3">
+                                        {tags.map((tag) => (
+                                            <div
+                                                key={tag}
+                                                className="bg-[#1a1a1a] text-[#64da87] border border-[#333336] rounded-full px-3 py-1 text-sm flex items-center"
+                                            >
+                                                {tag}
+                                                <button
+                                                    onClick={() =>
+                                                        handleRemoveTag(tag)
+                                                    }
+                                                    className="ml-2 text-[#A3A3A3] hover:text-white"
+                                                >
+                                                    ×
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        {/* Error message */}
+                        {error && (
+                            <div className="mt-4 text-red-500">{error}</div>
+                        )}
+
+                        {/* Publish button */}
+                        {/* <div className="mt-8 flex justify-end">
                             <button
                                 onClick={handlePublish}
-                                className="bg-[#41d26c] text-[#0F1014] font-semibold px-8 py-4 rounded-lg hover:bg-[#3ec766] transition-colors"
+                                disabled={loading || mutationLoading}
+                                className="bg-[#41D26C] text-black px-8 py-3 rounded-lg font-bold hover:bg-[#3EC766] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Publish Post
+                                {loading || mutationLoading
+                                    ? 'Publishing...'
+                                    : 'Publish'}
                             </button>
                         </div> */}
                     </div>

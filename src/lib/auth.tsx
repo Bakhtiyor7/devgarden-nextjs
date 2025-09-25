@@ -12,6 +12,7 @@ import React, {
 import { ApolloProvider } from '@apollo/client'
 import { ApolloClient, InMemoryCache, HttpLink, gql } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import Cookies from 'js-cookie'
 
 interface User {
     id: number
@@ -23,6 +24,7 @@ interface AuthContextType {
     token: string | null
     user: User | null
     isSignedIn: boolean
+    isLoading: boolean
     signIn: (credentials: {
         username: string
         password: string
@@ -40,42 +42,53 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [token, setToken] = useState<string | null>(null)
     const [user, setUser] = useState<User | null>(null)
+    const [isLoading, setIsLoading] = useState(true)
 
-    // Load token and user from localStorage on mount
+    // Load token and user from cookies on mount
     useEffect(() => {
-        // Only access localStorage on the client side
-        if (typeof window !== 'undefined') {
-            const storedToken = localStorage.getItem('token')
-            const storedUser = localStorage.getItem('user')
+        const storedToken = Cookies.get('token')
+        const storedUser = Cookies.get('user')
 
-            if (storedToken) {
-                setToken(storedToken)
-            }
+        if (storedToken) {
+            setToken(storedToken)
+        }
 
-            if (storedUser) {
-                try {
-                    setUser(JSON.parse(storedUser))
-                } catch (e) {
-                    console.error('Failed to parse user from localStorage')
-                }
+        if (storedUser) {
+            try {
+                setUser(JSON.parse(storedUser))
+            } catch (e) {
+                console.error('Failed to parse user from cookies')
+                // Clear invalid cookie
+                Cookies.remove('user')
             }
         }
+
+        setIsLoading(false)
     }, [])
 
-    // Save token and user to localStorage when they change
+    // Save token and user to cookies when they change
     useEffect(() => {
         if (token) {
-            localStorage.setItem('token', token)
+            // Set cookie with 7 days expiration, secure and sameSite options
+            Cookies.set('token', token, {
+                expires: 7,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+            })
         } else {
-            localStorage.removeItem('token')
+            Cookies.remove('token')
         }
     }, [token])
 
     useEffect(() => {
         if (user) {
-            localStorage.setItem('user', JSON.stringify(user))
+            Cookies.set('user', JSON.stringify(user), {
+                expires: 7,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+            })
         } else {
-            localStorage.removeItem('user')
+            Cookies.remove('user')
         }
     }, [user])
 
@@ -165,12 +178,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setToken(null)
         setUser(null)
         client.clearStore()
+        // Cookies will be cleared by the useEffect hooks when token/user become null
     }
 
     const value: AuthContextType = {
         token,
         user,
         isSignedIn: !!token,
+        isLoading,
         signIn,
         signOut,
     }

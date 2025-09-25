@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
-    const { isSignedIn, signOut } = useAuth()
+    const { isSignedIn, signOut, isLoading } = useAuth()
     const router = useRouter()
     const pathname = usePathname()
 
@@ -50,33 +50,35 @@ export default function Navbar() {
                         {/*  className="border rounded-[20px] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"*/}
                         {/*/>*/}
 
-                        {/* Write Icon/Link */}
-                        {pathname === '/write' ? (
-                            <button
-                                onClick={handlePublish}
-                                className="flex items-center justify-center text-[#0F1014] transition-colors bg-[#41D26C] hover:bg-[#3ec766] w-[122px] h-[40px] px-6 py-2 rounded-[8px] font-semibold size-[16px]"
-                            >
-                                Publish
-                            </button>
-                        ) : (
-                            <Link
-                                href="/write"
-                                className="flex items-center justify-center text-[#41D26C] transition-colors border border-[#41D26C] w-[130px] h-[40px] px-6 py-2 rounded-md"
-                            >
-                                <Image
-                                    src="/write.png"
-                                    alt="Write"
-                                    width={24}
-                                    height={24}
-                                    className="write-icon"
-                                />
-                                <span className="ml-2 text-[#41D26C]">
-                                    Write
-                                </span>
-                            </Link>
-                        )}
+                        {/* Write Icon/Link - Only show to signed in users */}
+                        {!isLoading &&
+                            isSignedIn &&
+                            (pathname === '/write' ? (
+                                <button
+                                    onClick={handlePublish}
+                                    className="flex items-center justify-center text-[#0F1014] transition-colors bg-[#41D26C] hover:bg-[#3ec766] w-[122px] h-[40px] px-6 py-2 rounded-[8px] font-semibold size-[16px]"
+                                >
+                                    Publish
+                                </button>
+                            ) : (
+                                <Link
+                                    href="/write"
+                                    className="flex items-center justify-center text-[#41D26C] transition-colors border border-[#41D26C] w-[130px] h-[40px] px-6 py-2 rounded-md"
+                                >
+                                    <Image
+                                        src="/write.png"
+                                        alt="Write"
+                                        width={24}
+                                        height={24}
+                                        className="write-icon"
+                                    />
+                                    <span className="ml-2 text-[#41D26C]">
+                                        Write
+                                    </span>
+                                </Link>
+                            ))}
                         {/* Mypage Icon/Link */}
-                        {isSignedIn ? (
+                        {!isLoading && isSignedIn && (
                             <Link
                                 href="/mypage"
                                 className="text-white hover:text-blue-500 transition-colors"
@@ -91,8 +93,10 @@ export default function Navbar() {
                                     />
                                 </div>
                             </Link>
-                        ) : null}
-                        {isSignedIn ? null : (
+                        )}
+
+                        {/* Login/Signup buttons - Only show to non-signed in users */}
+                        {!isLoading && !isSignedIn && (
                             <div className={'login-btn-container'}>
                                 <Link href="/signup" className="signup-btn">
                                     Signup
@@ -103,7 +107,8 @@ export default function Navbar() {
                             </div>
                         )}
 
-                        {isSignedIn ? (
+                        {/* Logout button - Only show to signed in users */}
+                        {!isLoading && isSignedIn && (
                             <Link
                                 href="/"
                                 onClick={handleLogout}
@@ -111,7 +116,7 @@ export default function Navbar() {
                             >
                                 Logout
                             </Link>
-                        ) : null}
+                        )}
                     </div>
                 </div>
             </div>

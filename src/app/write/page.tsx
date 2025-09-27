@@ -6,6 +6,7 @@ import TipTapEditor from '@/components/TipTapEditor'
 import { useAuth } from '@/lib/auth'
 import { useMutation } from '@apollo/client'
 import { CREATE_POST } from '@/graphql/queries'
+import { firstImageSrc } from '@/utils/commonUtils'
 
 export default function Write() {
     const { user } = useAuth()
@@ -44,14 +45,15 @@ export default function Write() {
 
         try {
             const tagInputs = tags.map((tag) => ({ name: tag }))
-
+            const cover = image || firstImageSrc(content) || null
+            console.log('cover:::', cover)
             const { data } = await createPost({
                 variables: {
                     input: {
                         title,
                         content,
                         author: user?.username || 'Anonymous',
-                        image,
+                        image: cover,
                         categoryName: category,
                         tags: tagInputs,
                     },

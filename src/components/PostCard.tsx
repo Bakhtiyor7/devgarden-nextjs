@@ -3,13 +3,15 @@
 import Link from 'next/link'
 import Image from 'next/image'
 
+import { firstImageSrc, toExcerpt } from '@/utils/commonUtils'
+
 interface PostCardProps {
     id: number
     title: string
     content: string
     author: string
     createdAt: string
-    image?: string
+    image?: string // optional cover stored in DB
 }
 
 export default function PostCard({
@@ -20,14 +22,17 @@ export default function PostCard({
     createdAt,
     image,
 }: PostCardProps) {
+    // Prefer explicit cover from DB; else extract first <img> in content
+    const cover = image || ''
+
     return (
         <Link href={`/article/${id}`} className="block no-underline">
             <div className="w-[380px] h-[520px] rounded-xl border border-[#333336] p-[20px] bg-[#0F1014] hover:translate-y-[-2px] transition-transform duration-200">
                 {/* Post Image */}
                 <div className="w-[340px] h-[240px] mb-[24px]">
-                    {image ? (
+                    {cover ? (
                         <img
-                            src={content}
+                            src={cover}
                             alt={title}
                             className="w-full h-full object-cover rounded-lg"
                             onError={(e) => {
@@ -57,17 +62,15 @@ export default function PostCard({
 
                 {/* Post Content */}
                 <div className="w-[340px]">
-                    {/* Title */}
                     <h2 className="w-[320px] h-[28px] text-white font-semibold text-[18px] leading-[28px] mb-[12px] overflow-hidden">
                         {title}
                     </h2>
 
-                    {/* Content */}
+                    {/* Use text excerpt, not raw HTML slice */}
                     <p className="w-[340px] h-[40px] text-[#A3A3A3] text-[15px] leading-[20px] opacity-50 mb-[20px] overflow-hidden">
-                        {content.slice(0, 400)}…
+                        {toExcerpt(content, 160)}
                     </p>
 
-                    {/* Author */}
                     <div className="flex flex-row items-center gap-2 text-[#666666] text-[13px]">
                         <Image
                             src="/profile-img.jpg"

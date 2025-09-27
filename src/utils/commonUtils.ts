@@ -17,6 +17,7 @@ export function firstImageSrc(html?: string): string | null {
     if (typeof window !== 'undefined' && 'DOMParser' in window) {
         try {
             const doc = new DOMParser().parseFromString(html, 'text/html')
+
             return doc.querySelector('img')?.getAttribute('src') || null
         } catch {
             /* fallthrough */

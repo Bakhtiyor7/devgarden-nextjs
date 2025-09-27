@@ -147,7 +147,7 @@ export default async function Article({
                     </h1>
 
                     {/* Featured Image */}
-                    {post.image && (
+                    {/* {post.image && (
                         <div className="mb-10">
                             <img
                                 src={post.image}
@@ -155,7 +155,7 @@ export default async function Article({
                                 className="w-full rounded-lg object-cover max-h-[500px]"
                             />
                         </div>
-                    )}
+                    )} */}
 
                     {/* Content */}
                     <div

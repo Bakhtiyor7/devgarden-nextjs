@@ -46,7 +46,6 @@ export default function Write() {
         try {
             const tagInputs = tags.map((tag) => ({ name: tag }))
             const cover = image || firstImageSrc(content) || null
-            console.log('cover:::', cover)
             const { data } = await createPost({
                 variables: {
                     input: {

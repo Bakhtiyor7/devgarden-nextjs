@@ -27,7 +27,7 @@ export default function PostCard({
                 <div className="w-[340px] h-[240px] mb-[24px]">
                     {image ? (
                         <img
-                            src={image}
+                            src={content}
                             alt={title}
                             className="w-full h-full object-cover rounded-lg"
                             onError={(e) => {

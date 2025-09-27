@@ -14,15 +14,18 @@ export async function uploadImage(file: File): Promise<string> {
         method: 'POST',
         body: fd,
         headers: {
-            // Add the JWT token to the Authorization header
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         credentials: 'include',
     })
     if (!res.ok) {
-        const detail = await res.json().catch(() => ({}))
-        throw new Error(detail?.error || `Upload failed (${res.status})`)
+        let detail = ''
+        try {
+            detail = JSON.stringify(await res.json())
+        } catch {}
+        throw new Error(detail || `Upload failed (${res.status})`)
     }
+
     const { url } = await res.json()
-    return `${API_BASE}${url}` // return absolute if your consumer needs it
+    return url.startsWith('http') ? url : `${API_BASE}${url}` // return absolute if your consumer needs it
 }

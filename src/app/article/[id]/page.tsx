@@ -158,15 +158,10 @@ export default async function Article({
                     )}
 
                     {/* Content */}
-                    <div className="text-[#A3A3A3] leading-relaxed text-lg whitespace-pre-wrap">
-                        {toExcerpt(post.content)
-                            .split('\n')
-                            .map((paragraph, index) => (
-                                <p key={index} className="mb-6">
-                                    {paragraph}
-                                </p>
-                            ))}
-                    </div>
+                    <div
+                        className="prose prose-invert max-w-none text-[#A3A3A3] leading-relaxed text-lg"
+                        dangerouslySetInnerHTML={{ __html: post.content }}
+                    />
 
                     {/* Tags */}
                     {post.tags && post.tags.length > 0 && (

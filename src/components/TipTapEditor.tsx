@@ -1,5 +1,5 @@
 'use client'
-import { useEditor, EditorContent, Editor } from '@tiptap/react'
+import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
@@ -16,6 +16,7 @@ import {
     Video,
     Type,
 } from 'lucide-react'
+import { uploadImage } from '@/lib/upload'
 import './tiptap-styles.css'
 
 interface TipTapEditorProps {
@@ -32,6 +33,7 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
     const [showMenu, setShowMenu] = useState(false)
     const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 })
     const editorRef = useRef<HTMLDivElement>(null)
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     const lowlight = createLowlight()
 
@@ -39,9 +41,7 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
         extensions: [
             StarterKit,
             Image.configure({
-                HTMLAttributes: {
-                    class: 'rounded-lg max-w-full h-auto',
-                },
+                HTMLAttributes: { class: 'rounded-lg max-w-full h-auto' },
             }),
             Link.configure({
                 openOnClick: false,
@@ -58,9 +58,7 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
             Youtube.configure({
                 width: 640,
                 height: 480,
-                HTMLAttributes: {
-                    class: 'rounded-lg my-4',
-                },
+                HTMLAttributes: { class: 'rounded-lg my-4' },
             }),
             Placeholder.configure({
                 placeholder,
@@ -70,53 +68,110 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
         ],
         content,
         immediatelyRender: false,
-        onUpdate: ({ editor }) => {
-            const html = editor.getHTML()
-            onChange?.(html)
-        },
+        onUpdate: ({ editor }) => onChange?.(editor.getHTML()),
         editorProps: {
             attributes: {
                 class: 'prose prose-invert max-w-none focus:outline-none text-[#A3A3A3] text-lg leading-relaxed min-h-[400px] p-4',
+            },
+            // ------------- Drag & Drop -------------
+            handleDrop: (view, event, _slice, _moved) => {
+                const dt = (event as DragEvent).dataTransfer
+                const files = Array.from(dt?.files ?? [])
+                const images = files.filter((f) => f.type.startsWith('image/'))
+                if (images.length === 0) return false
+
+                event.preventDefault()
+                const coords = view.posAtCoords({
+                    left: (event as DragEvent).clientX,
+                    top: (event as DragEvent).clientY,
+                })
+                const pos = coords?.pos ?? view.state.selection.from
+
+                images.forEach(async (file) => {
+                    try {
+                        const url = await uploadImage(file)
+                        const { schema } = view.state
+                        const node = schema.nodes.image.create({ src: url })
+                        const tr = view.state.tr.insert(pos, node)
+                        view.dispatch(tr)
+                    } catch (e) {
+                        console.error('Image upload failed:', e)
+                    }
+                })
+                return true
+            },
+            // ------------- Paste from clipboard -------------
+            handlePaste: (view, event) => {
+                const clipboard = (event as ClipboardEvent).clipboardData
+                const files = Array.from(clipboard?.files ?? [])
+                const images = files.filter((f) => f.type.startsWith('image/'))
+                if (images.length === 0) return false
+
+                event.preventDefault()
+                const pos = view.state.selection.from
+
+                images.forEach(async (file) => {
+                    try {
+                        const url = await uploadImage(file)
+                        const { schema } = view.state
+                        const node = schema.nodes.image.create({ src: url })
+                        const tr = view.state.tr.insert(pos, node)
+                        view.dispatch(tr)
+                    } catch (e) {
+                        console.error('Image paste upload failed:', e)
+                    }
+                })
+                return true
             },
         },
     })
 
     const updateMenuPosition = () => {
         if (!editor || !editorRef.current) return
-
         const { selection } = editor.state
         const { from } = selection
         const start = editor.view.coordsAtPos(from)
         const editorRect = editorRef.current.getBoundingClientRect()
-
-        setMenuPosition({
-            top: start.top - editorRect.top,
-            left: -60, // Position to the left of the content
-        })
+        setMenuPosition({ top: start.top - editorRect.top, left: -60 })
     }
 
     useEffect(() => {
         if (!editor) return
-
-        const updatePosition = () => {
-            updateMenuPosition()
-        }
-
+        const updatePosition = () => updateMenuPosition()
         editor.on('selectionUpdate', updatePosition)
         editor.on('transaction', updatePosition)
-
         return () => {
             editor.off('selectionUpdate', updatePosition)
             editor.off('transaction', updatePosition)
         }
     }, [editor])
 
-    const addImage = () => {
+    // ---------- Actions ----------
+    const addImageFromURL = () => {
         const url = window.prompt('Enter image URL:')
-        if (url && editor) {
-            editor.chain().focus().setImage({ src: url }).run()
-        }
+        if (url && editor) editor.chain().focus().setImage({ src: url }).run()
         setShowMenu(false)
+    }
+
+    const addImageFromFile = () => {
+        fileInputRef.current?.click()
+        setShowMenu(false)
+    }
+
+    const onPickFile: React.ChangeEventHandler<HTMLInputElement> = async (
+        e
+    ) => {
+        const file = e.target.files?.[0]
+        if (!file || !editor) return
+        try {
+            const url = await uploadImage(file)
+            editor.chain().focus().setImage({ src: url }).run()
+        } catch (err) {
+            console.error('Image upload failed:', (err as Error).message)
+            alert('Image upload failed.')
+        } finally {
+            e.target.value = '' // reset so same file can be selected again
+        }
     }
 
     const addLink = () => {
@@ -133,9 +188,7 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
     }
 
     const addCodeBlock = () => {
-        if (editor) {
-            editor.chain().focus().toggleCodeBlock().run()
-        }
+        editor?.chain().focus().toggleCodeBlock().run()
         setShowMenu(false)
     }
 
@@ -152,33 +205,36 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
     }
 
     const addHeading = () => {
-        if (editor) {
-            editor.chain().focus().toggleHeading({ level: 2 }).run()
-        }
+        editor?.chain().focus().toggleHeading({ level: 2 }).run()
         setShowMenu(false)
     }
 
     const menuItems = [
-        { icon: ImageIcon, label: 'Image', action: addImage },
+        { icon: ImageIcon, label: 'Upload Image', action: addImageFromFile },
+        { icon: ImageIcon, label: 'Image from URL', action: addImageFromURL },
         { icon: LinkIcon, label: 'Link', action: addLink },
         { icon: Code, label: 'Code', action: addCodeBlock },
         { icon: Video, label: 'Video', action: addYouTube },
         { icon: Type, label: 'Heading', action: addHeading },
     ]
 
-    if (!editor) {
-        return null
-    }
+    if (!editor) return null
 
     return (
         <div className="relative" ref={editorRef}>
-            {/* Floating Plus Button */}
+            {/* Hidden file input */}
+            <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                className="hidden"
+                onChange={onPickFile}
+            />
+
+            {/* Floating “+” */}
             <div
                 className="absolute z-50 transition-all duration-200"
-                style={{
-                    top: menuPosition.top,
-                    left: menuPosition.left,
-                }}
+                style={{ top: menuPosition.top, left: menuPosition.left }}
             >
                 <button
                     onClick={(e) => {
@@ -191,12 +247,11 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
                     <Plus size={16} className="text-[#A3A3A3]" />
                 </button>
 
-                {/* Menu */}
                 {showMenu && (
-                    <div className="absolute top-0 left-10 bg-[#1A1B1F] border border-[#333336] rounded-lg shadow-lg py-2 min-w-[120px] z-[60]">
-                        {menuItems.map((item, index) => (
+                    <div className="absolute top-0 left-10 bg-[#1A1B1F] border border-[#333336] rounded-lg shadow-lg py-2 min-w-[160px] z-[60]">
+                        {menuItems.map((item, i) => (
                             <button
-                                key={index}
+                                key={i}
                                 onClick={(e) => {
                                     e.preventDefault()
                                     e.stopPropagation()
@@ -215,7 +270,7 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({
             {/* Editor */}
             <EditorContent editor={editor} />
 
-            {/* Click outside to close menu */}
+            {/* click-outside to close menu */}
             {showMenu && (
                 <div
                     className="fixed inset-0 z-40"

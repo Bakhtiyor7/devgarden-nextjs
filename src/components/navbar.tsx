@@ -1,111 +1,125 @@
-"use client";
-import { useAuth } from "@/lib/auth";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+'use client'
+import { useAuth } from '@/lib/auth'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import './styles/navbar.css'
+import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
-  const { isSignedIn, signOut, signIn } = useAuth();
-  const router = useRouter();
+    const { isSignedIn, signOut, isLoading } = useAuth()
+    const router = useRouter()
+    const pathname = usePathname()
 
-  const handleLogout = async () => {
-    // clear your token + Apollo cache
-    signOut();
-    // then send them to the login page
-    alert("Successfully logged out");
-    router.push("/");
-  };
-  return (
-    <nav className="bg-white shadow-md p-4 w-full max-h-[75px]">
-      <div className="container mx-auto flex justify-between items-center">
-        {/* Homepage Link */}
-        <Link
-          href="/"
-          className="text-xl font-bold text-gray-800 hover:text-blue-500 transition-colors"
-        >
-          DevGarden
-        </Link>
+    const handleLogout = async () => {
+        // clear your token + Apollo cache
+        signOut()
+        // then send them to the login page
+        alert('Successfully logged out')
+        router.push('/')
+    }
 
-        {/* Right Side: Search, Write, Mypage */}
-        <div className="flex items-center space-x-6 row-auto">
-          {/* Search Bar */}
-          <input
-            type="text"
-            placeholder="Search anything"
-            className="border rounded-[20px] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
-          />
+    const handlePublish = () => {
+        // Trigger the publish action by dispatching a custom event
+        // This allows the write page to handle the actual publishing logic
+        window.dispatchEvent(new CustomEvent('publishPost'))
+    }
+    return (
+        <nav className="navbar">
+            <div className="wrapper">
+                <div className="container">
+                    {/* Homepage Link */}
+                    <Link
+                        href="/"
+                        className="text-xl font-bold text-gray-800 hover:text-blue-500 transition-colors"
+                    >
+                        <Image
+                            src="/logo.png"
+                            alt="project logo"
+                            width={121}
+                            height={40}
+                        />
+                    </Link>
 
-          {/* Write Icon/Link */}
-          <Link
-            href="/write"
-            className="flex items-center text-gray-600 hover:text-blue-500 transition-colors"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-              />
-            </svg>
-            <span className="ml-2">Write</span>
-          </Link>
+                    {/* Right Side: Search, Write, Mypage */}
+                    <div className="flex items-center space-x-6 row-auto suppressHydrationWarning">
+                        {/* Search Bar */}
+                        {/*<input*/}
+                        {/*  type="text"*/}
+                        {/*  placeholder="Search anything"*/}
+                        {/*  className="border rounded-[20px] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"*/}
+                        {/*/>*/}
 
-          {/* Mypage Icon/Link */}
-          {isSignedIn ? (
-            <Link
-              href="/mypage"
-              className="text-gray-600 hover:text-blue-500 transition-colors"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-            </Link>
-          ) : null}
-          {isSignedIn ? null : (
-            <>
-              <Link
-                href="/signup"
-                className="text-sm text-gray-900 hover:underline"
-              >
-                Signup
-              </Link>
-              <Link
-                href="/login"
-                className="text-sm text-blue-500 hover:underline"
-              >
-                Login
-              </Link>
-            </>
-          )}
+                        {/* Write Icon/Link - Only show to signed in users */}
+                        {!isLoading &&
+                            isSignedIn &&
+                            (pathname === '/write' ? (
+                                <button
+                                    onClick={handlePublish}
+                                    className="flex items-center justify-center text-[#0F1014] transition-colors bg-[#41D26C] hover:bg-[#3ec766] w-[122px] h-[40px] px-6 py-2 rounded-[8px] font-semibold size-[16px]"
+                                >
+                                    Publish
+                                </button>
+                            ) : (
+                                <Link
+                                    href="/write"
+                                    className="flex items-center justify-center text-[#41D26C] transition-colors border border-[#41D26C] w-[130px] h-[40px] px-6 py-2 rounded-md"
+                                >
+                                    <Image
+                                        src="/write.png"
+                                        alt="Write"
+                                        width={24}
+                                        height={24}
+                                        className="write-icon"
+                                    />
+                                    <span className="ml-2 text-[#41D26C]">
+                                        Write
+                                    </span>
+                                </Link>
+                            ))}
+                        {/* Mypage Icon/Link */}
+                        {!isLoading && isSignedIn && (
+                            <Link
+                                href="/mypage"
+                                className="text-white hover:text-blue-500 transition-colors"
+                            >
+                                <div className="flex items-center border border-gray-300 rounded-full p-0 hover:bg-gray-700 transition-colors cursor-pointer w-10 h-10">
+                                    <Image
+                                        src="/profile-img.jpg"
+                                        alt="My Page"
+                                        width={40}
+                                        height={40}
+                                        className="rounded-full w-full h-full object-cover"
+                                    />
+                                </div>
+                            </Link>
+                        )}
 
-          {isSignedIn ? (
-            <Link
-              href="/"
-              onClick={handleLogout}
-              className="text-sm text-red-600 hover:underline"
-            >
-              Logout
-            </Link>
-          ) : null}
-        </div>
-      </div>
-    </nav>
-  );
+                        {/* Login/Signup buttons - Only show to non-signed in users */}
+                        {!isLoading && !isSignedIn && (
+                            <div className={'login-btn-container'}>
+                                <Link href="/signup" className="signup-btn">
+                                    Signup
+                                </Link>
+                                <Link href="/login" className="login-btn">
+                                    Login
+                                </Link>
+                            </div>
+                        )}
+
+                        {/* Logout button - Only show to signed in users */}
+                        {!isLoading && isSignedIn && (
+                            <Link
+                                href="/"
+                                onClick={handleLogout}
+                                className="text-sm text-blue-500 hover:underline"
+                            >
+                                Logout
+                            </Link>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    )
 }

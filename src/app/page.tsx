@@ -19,9 +19,10 @@ interface Post {
     image?: string
 }
 
-async function fetchPosts(): Promise<Post[]> {
+async function fetchPosts(categoryName?: string): Promise<Post[]> {
     const { data, errors } = await client.query<{ getPosts: Post[] }>({
         query: GET_POSTS,
+        variables: { categoryName }, // Example variables
         fetchPolicy: 'no-cache',
         errorPolicy: 'all',
     })
@@ -33,8 +34,16 @@ async function fetchPosts(): Promise<Post[]> {
     return data.getPosts
 }
 
-export default async function Home() {
-    const posts = await fetchPosts()
+async function handleCategory(category: string | null) {
+    // Placeholder for category filtering logic
+    console.log('Selected category:', category)
+}
+
+export default async function Home({
+    searchParams,
+}: {
+    searchParams?: { category?: string }
+}) {
     const categories = [
         'All',
         'Technology',
@@ -43,12 +52,21 @@ export default async function Home() {
         'Tutorial',
     ]
 
+    const selected = searchParams?.category
+    const categoryForQuery =
+        selected && selected !== 'All' ? selected : undefined
+
+    const posts = await fetchPosts(categoryForQuery)
+
     return (
         <div className="home-page">
             <div className={'homepage-wrapper'}>
                 <Header />
                 <div className="posts-container">
-                    <CategoryFilter categories={categories} />
+                    <CategoryFilter
+                        categories={categories}
+                        activeCategory={selected ?? 'All'}
+                    />
                     <div className="posts-list">
                         {posts.map((post) => (
                             <PostCard

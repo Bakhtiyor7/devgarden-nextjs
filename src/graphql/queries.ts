@@ -2,8 +2,8 @@ import { gql } from '@apollo/client'
 
 // Fetch all posts
 export const GET_POSTS = gql`
-    query GetPosts {
-        getPosts {
+    query GetPosts($skip: Int, $take: Int, $categoryName: String) {
+        getPosts(skip: $skip, take: $take, categoryName: $categoryName) {
             id
             title
             content
@@ -12,6 +12,7 @@ export const GET_POSTS = gql`
             image
             updatedAt
             category {
+                id
                 name
             }
             tags {

@@ -19,17 +19,36 @@ interface Post {
     image?: string
 }
 
-async function fetchPosts(categoryName?: string): Promise<Post[]> {
-    const { data, errors } = await client.query<{ getPosts: Post[] }>({
+type PostEdge = {
+    cursor: string
+    node: {
+        id: number
+        title: string
+        content: string
+        author: string
+        createdAt: string
+        image?: string
+    }
+}
+
+async function fetchPosts(
+    categoryName: string | undefined,
+    first: number,
+    after?: string
+) {
+    const { data, errors } = await client.query<{
+        getPosts: {
+            edges: PostEdge[]
+            pageInfo: { endCursor: string | null; hasNextPage: boolean }
+        }
+    }>({
         query: GET_POSTS,
-        variables: { categoryName }, // Example variables
+        variables: { first, after, categoryName },
         fetchPolicy: 'no-cache',
         errorPolicy: 'all',
     })
-
     if (errors?.length) {
         console.error('GET_POSTS errors:', errors)
-        return []
     }
     return data.getPosts
 }
@@ -42,29 +61,32 @@ async function handleCategory(category: string | null) {
 export default async function Home({
     searchParams,
 }: {
-    searchParams?: { category?: string }
+    searchParams?: { category?: string; after?: string }
 }) {
-    const categories = [
-        'All',
-        'Technology',
-        'Design',
-        'Programming',
-        'Tutorial',
-    ]
+    const sp = await searchParams
+    const selected = sp?.category
+    const after = sp?.after
 
-    const selected = searchParams?.category
     const categoryForQuery =
         selected && selected !== 'All' ? selected : undefined
+    const first = 10
 
-    const posts = await fetchPosts(categoryForQuery)
+    const { edges, pageInfo } = await fetchPosts(categoryForQuery, first, after)
+    const posts = edges.map((e) => e.node)
 
     return (
         <div className="home-page">
-            <div className={'homepage-wrapper'}>
+            <div className="homepage-wrapper">
                 <Header />
                 <div className="posts-container">
                     <CategoryFilter
-                        categories={categories}
+                        categories={[
+                            'All',
+                            'Technology',
+                            'Design',
+                            'Programming',
+                            'Tutorial',
+                        ]}
                         activeCategory={selected ?? 'All'}
                     />
                     <div className="posts-list">
@@ -79,7 +101,25 @@ export default async function Home({
                                 image={post.image}
                             />
                         ))}
+                        {posts.length === 0 && (
+                            <div className="empty-state">No posts yet.</div>
+                        )}
                     </div>
+
+                    {/* Simple SSR-friendly "Next" pager */}
+                    {pageInfo.hasNextPage && pageInfo.endCursor && (
+                        <div className="pager mt-6">
+                            <a
+                                href={`/?${new URLSearchParams({
+                                    ...(selected ? { category: selected } : {}),
+                                    after: pageInfo.endCursor,
+                                }).toString()}`}
+                                className="btn"
+                            >
+                                Next
+                            </a>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

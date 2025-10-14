@@ -2,21 +2,30 @@ import { gql } from '@apollo/client'
 
 // Fetch all posts
 export const GET_POSTS = gql`
-    query GetPosts($skip: Int, $take: Int, $categoryName: String) {
-        getPosts(skip: $skip, take: $take, categoryName: $categoryName) {
-            id
-            title
-            content
-            author
-            createdAt
-            image
-            updatedAt
-            category {
-                id
-                name
+    query GetPosts($first: Int!, $after: String, $categoryName: String) {
+        getPosts(first: $first, after: $after, categoryName: $categoryName) {
+            edges {
+                cursor
+                node {
+                    id
+                    title
+                    content
+                    author
+                    createdAt
+                    image
+                    category {
+                        id
+                        name
+                    }
+                    tags {
+                        id
+                        name
+                    }
+                }
             }
-            tags {
-                name
+            pageInfo {
+                endCursor
+                hasNextPage
             }
         }
     }

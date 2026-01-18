@@ -69,9 +69,17 @@ export default function Write() {
                 // Otherwise redirect to home
                 window.location.href = '/'
             }
-        } catch (error) {
-            console.error('Error creating post:', error)
-            setError('Failed to publish post. Please try again.')
+        } catch (err: any) {
+            console.error('Error creating post:', err)
+            // Log detailed Apollo error info
+            if (err.graphQLErrors) {
+                console.error('GraphQL Errors:', err.graphQLErrors)
+            }
+            if (err.networkError) {
+                console.error('Network Error:', err.networkError)
+            }
+            const message = err.message || 'Failed to publish post. Please try again.'
+            setError(message)
         } finally {
             setLoading(false)
         }

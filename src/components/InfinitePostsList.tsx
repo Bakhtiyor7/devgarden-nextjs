@@ -69,7 +69,14 @@ export default function InfinitePostsList({
             }
             setIsLoadingMore(false)
         },
-        onError: () => {
+        onError: (err) => {
+            console.error('Error loading more posts:', err)
+            if (err.graphQLErrors) {
+                console.error('GraphQL Errors:', err.graphQLErrors)
+            }
+            if (err.networkError) {
+                console.error('Network Error:', err.networkError)
+            }
             setIsLoadingMore(false)
         },
     })

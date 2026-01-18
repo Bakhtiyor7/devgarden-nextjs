@@ -90,6 +90,7 @@ export default function Write() {
         }
     }, [content, category, tags, image])
 
+    // TODO: Get categories from the server (DB)
     const categories = [
         'Technology',
         'Design',
@@ -97,6 +98,7 @@ export default function Write() {
         'Tutorial',
         'Career',
         'DevOps',
+        "Other"
     ]
 
     return (

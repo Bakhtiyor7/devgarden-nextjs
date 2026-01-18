@@ -1,13 +1,10 @@
 // src/app/page.tsx
-import Link from 'next/link'
 import client from '@/lib/apollo-client'
 import { GET_POSTS } from '@/graphql/queries'
 import Header from '@/components/header'
-import Image from 'next/image'
 import './homepage.css'
 import CategoryFilter from '@/components/CategoryFilter'
-import PostCard from '@/components/PostCard'
-import { stripHtml, toExcerpt } from '@/utils/commonUtils'
+import InfinitePostsList from '@/components/InfinitePostsList'
 
 // Type for posts returned by GET_POSTS
 interface Post {
@@ -21,14 +18,12 @@ interface Post {
 
 type PostEdge = {
     cursor: string
-    node: {
-        id: number
-        title: string
-        content: string
-        author: string
-        createdAt: string
-        image?: string
-    }
+    node: Post
+}
+
+type PageInfo = {
+    endCursor: string | null
+    hasNextPage: boolean
 }
 
 async function fetchPosts(
@@ -39,7 +34,7 @@ async function fetchPosts(
     const { data, errors } = await client.query<{
         getPosts: {
             edges: PostEdge[]
-            pageInfo: { endCursor: string | null; hasNextPage: boolean }
+            pageInfo: PageInfo
         }
     }>({
         query: GET_POSTS,
@@ -53,25 +48,19 @@ async function fetchPosts(
     return data.getPosts
 }
 
-async function handleCategory(category: string | null) {
-    // Placeholder for category filtering logic
-    console.log('Selected category:', category)
-}
-
 export default async function Home({
     searchParams,
 }: {
-    searchParams?: { category?: string; after?: string }
+    searchParams?: { category?: string }
 }) {
     const sp = await searchParams
     const selected = sp?.category
-    const after = sp?.after
 
     const categoryForQuery =
         selected && selected !== 'All' ? selected : undefined
     const first = 10
 
-    const { edges, pageInfo } = await fetchPosts(categoryForQuery, first, after)
+    const { edges, pageInfo } = await fetchPosts(categoryForQuery, first)
     const posts = edges.map((e) => e.node)
 
     return (
@@ -89,37 +78,11 @@ export default async function Home({
                         ]}
                         activeCategory={selected ?? 'All'}
                     />
-                    <div className="posts-list">
-                        {posts.map((post) => (
-                            <PostCard
-                                key={post.id}
-                                id={post.id}
-                                title={post.title}
-                                content={toExcerpt(post.content)}
-                                author={post.author}
-                                createdAt={post.createdAt}
-                                image={post.image}
-                            />
-                        ))}
-                        {posts.length === 0 && (
-                            <div className="empty-state">No posts yet.</div>
-                        )}
-                    </div>
-
-                    {/* Simple SSR-friendly "Next" pager */}
-                    {pageInfo.hasNextPage && pageInfo.endCursor && (
-                        <div className="pager mt-6">
-                            <a
-                                href={`/?${new URLSearchParams({
-                                    ...(selected ? { category: selected } : {}),
-                                    after: pageInfo.endCursor,
-                                }).toString()}`}
-                                className="btn"
-                            >
-                                Next
-                            </a>
-                        </div>
-                    )}
+                    <InfinitePostsList
+                        initialPosts={posts}
+                        initialPageInfo={pageInfo}
+                        categoryName={categoryForQuery}
+                    />
                 </div>
             </div>
         </div>

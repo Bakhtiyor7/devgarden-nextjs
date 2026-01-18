@@ -40,6 +40,11 @@ export default function Write() {
             return
         }
 
+        if (!user?.id) {
+            alert('You must be logged in to publish a post')
+            return
+        }
+
         setLoading(true)
         setError('')
 
@@ -52,6 +57,7 @@ export default function Write() {
                         title,
                         content,
                         author: user?.username || 'Anonymous',
+                        userId: user.id,
                         image: cover,
                         categoryName: category,
                         tags: tagInputs,

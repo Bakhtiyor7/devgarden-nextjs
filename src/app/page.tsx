@@ -48,10 +48,11 @@ async function fetchPosts(
     return data.getPosts
 }
 
+// ✅ Fix: Update type definition for Next.js 15
 export default async function Home({
     searchParams,
 }: {
-    searchParams?: { category?: string }
+    searchParams?: Promise<{ category?: string }> // ← Changed: wrapped in Promise
 }) {
     const sp = await searchParams
     const selected = sp?.category

@@ -8,6 +8,49 @@ import { useMutation } from '@apollo/client'
 import { CREATE_POST } from '@/graphql/queries'
 import { firstImageSrc } from '@/utils/commonUtils'
 
+// Helper to extract user-friendly error message from Apollo errors
+function getErrorMessage(err: any): string {
+    // Network errors (connection issues, payload too large, etc.)
+    if (err.networkError) {
+        const status = err.networkError.statusCode
+        if (status === 413) {
+            return 'Content too large. Try using smaller images or fewer images.'
+        }
+        if (status === 401 || status === 403) {
+            return 'Session expired. Please log in again.'
+        }
+        if (status === 500) {
+            return 'Server error. Please try again later.'
+        }
+        if (err.networkError.message?.includes('Failed to fetch')) {
+            return 'Connection failed. Check your internet connection.'
+        }
+        // Payload too large often shows as network error without status
+        if (
+            err.networkError.message?.includes('PayloadTooLargeError') ||
+            err.networkError.bodyText?.includes('too large')
+        ) {
+            return 'Content too large. Try using smaller images or link to external images instead.'
+        }
+        return 'Network error. Please check your connection.'
+    }
+
+    // GraphQL errors (validation, business logic)
+    if (err.graphQLErrors?.length > 0) {
+        const messages = err.graphQLErrors.map((e: any) => e.message).join('. ')
+        if (
+            messages.includes('unauthorized') ||
+            messages.includes('authentication')
+        ) {
+            return 'Please log in to publish.'
+        }
+        return messages
+    }
+
+    // Fallback to error message
+    return err.message || 'Failed to publish. Please try again.'
+}
+
 export default function Write() {
     const { user } = useAuth()
     const titleRef = useRef<HTMLInputElement>(null)
@@ -18,6 +61,7 @@ export default function Write() {
     const [image, setImage] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+    const isSubmitting = useRef(false)
 
     const [createPost, { loading: mutationLoading }] = useMutation(CREATE_POST)
 
@@ -35,11 +79,23 @@ export default function Write() {
     const handlePublish = async () => {
         const title = titleRef.current?.value
 
+        // prevent duplicate save
+        if (isSubmitting.current) {
+            console.log('Already submitting, ignoring duplicate click')
+            return
+        }
+
         if (!title || !content || content === '<p></p>') {
             alert('Please fill in both title and content')
             return
         }
 
+        if (!user) {
+            alert('You must be logged in to publish a post')
+            return
+        }
+
+        isSubmitting.current = true
         setLoading(true)
         setError('')
 
@@ -69,9 +125,12 @@ export default function Write() {
                 // Otherwise redirect to home
                 window.location.href = '/'
             }
-        } catch (error) {
-            console.error('Error creating post:', error)
-            setError('Failed to publish post. Please try again.')
+        } catch (err: any) {
+            console.error('Error creating post:', err)
+            console.error('GraphQL Errors:', err.graphQLErrors)
+            console.error('Network Error:', err.networkError)
+            setError(getErrorMessage(err))
+            isSubmitting.current = false
         } finally {
             setLoading(false)
         }
@@ -90,6 +149,7 @@ export default function Write() {
         }
     }, [content, category, tags, image])
 
+    // TODO: Get categories from the server (DB)
     const categories = [
         'Technology',
         'Design',
@@ -97,6 +157,7 @@ export default function Write() {
         'Tutorial',
         'Career',
         'DevOps',
+        'Other',
     ]
 
     return (
@@ -206,7 +267,15 @@ export default function Write() {
                         </div>
                         {/* Error message */}
                         {error && (
-                            <div className="mt-4 text-red-500">{error}</div>
+                            <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center justify-between">
+                                <span className="text-red-400">{error}</span>
+                                <button
+                                    onClick={() => setError('')}
+                                    className="text-red-400 hover:text-red-300 ml-4"
+                                >
+                                    ✕
+                                </button>
+                            </div>
                         )}
 
                         {/* Publish button */}

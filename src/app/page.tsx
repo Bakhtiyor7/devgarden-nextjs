@@ -1,13 +1,10 @@
 // src/app/page.tsx
-import Link from 'next/link'
 import client from '@/lib/apollo-client'
 import { GET_POSTS } from '@/graphql/queries'
 import Header from '@/components/header'
-import Image from 'next/image'
 import './homepage.css'
 import CategoryFilter from '@/components/CategoryFilter'
-import PostCard from '@/components/PostCard'
-import { stripHtml, toExcerpt } from '@/utils/commonUtils'
+import InfinitePostsList from '@/components/InfinitePostsList'
 
 // Type for posts returned by GET_POSTS
 interface Post {
@@ -19,49 +16,73 @@ interface Post {
     image?: string
 }
 
-async function fetchPosts(): Promise<Post[]> {
-    const { data, errors } = await client.query<{ getPosts: Post[] }>({
+type PostEdge = {
+    cursor: string
+    node: Post
+}
+
+type PageInfo = {
+    endCursor: string | null
+    hasNextPage: boolean
+}
+
+async function fetchPosts(
+    categoryName: string | undefined,
+    first: number,
+    after?: string
+) {
+    const { data, errors } = await client.query<{
+        getPosts: {
+            edges: PostEdge[]
+            pageInfo: PageInfo
+        }
+    }>({
         query: GET_POSTS,
+        variables: { first, after, categoryName },
         fetchPolicy: 'no-cache',
         errorPolicy: 'all',
     })
-
     if (errors?.length) {
         console.error('GET_POSTS errors:', errors)
-        return []
     }
     return data.getPosts
 }
 
-export default async function Home() {
-    const posts = await fetchPosts()
-    const categories = [
-        'All',
-        'Technology',
-        'Design',
-        'Programming',
-        'Tutorial',
-    ]
+export default async function Home({
+    searchParams,
+}: {
+    searchParams?: { category?: string }
+}) {
+    const sp = await searchParams
+    const selected = sp?.category
+
+    const categoryForQuery =
+        selected && selected !== 'All' ? selected : undefined
+    const first = 10
+
+    const { edges, pageInfo } = await fetchPosts(categoryForQuery, first)
+    const posts = edges.map((e) => e.node)
 
     return (
         <div className="home-page">
-            <div className={'homepage-wrapper'}>
+            <div className="homepage-wrapper">
                 <Header />
                 <div className="posts-container">
-                    <CategoryFilter categories={categories} />
-                    <div className="posts-list">
-                        {posts.map((post) => (
-                            <PostCard
-                                key={post.id}
-                                id={post.id}
-                                title={post.title}
-                                content={toExcerpt(post.content)}
-                                author={post.author}
-                                createdAt={post.createdAt}
-                                image={post.image}
-                            />
-                        ))}
-                    </div>
+                    <CategoryFilter
+                        categories={[
+                            'All',
+                            'Technology',
+                            'Design',
+                            'Programming',
+                            'Tutorial',
+                        ]}
+                        activeCategory={selected ?? 'All'}
+                    />
+                    <InfinitePostsList
+                        initialPosts={posts}
+                        initialPageInfo={pageInfo}
+                        categoryName={categoryForQuery}
+                    />
                 </div>
             </div>
         </div>

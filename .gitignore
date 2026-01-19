@@ -42,3 +42,9 @@ next-env.d.ts
 
 # intellij
 .idea
+
+
+*.tar.gz                #ignore all tar.gz files
+
+
+/logs

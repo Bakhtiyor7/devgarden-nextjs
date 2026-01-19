@@ -26,8 +26,10 @@ function getErrorMessage(err: any): string {
             return 'Connection failed. Check your internet connection.'
         }
         // Payload too large often shows as network error without status
-        if (err.networkError.message?.includes('PayloadTooLargeError') ||
-            err.networkError.bodyText?.includes('too large')) {
+        if (
+            err.networkError.message?.includes('PayloadTooLargeError') ||
+            err.networkError.bodyText?.includes('too large')
+        ) {
             return 'Content too large. Try using smaller images or link to external images instead.'
         }
         return 'Network error. Please check your connection.'
@@ -36,7 +38,10 @@ function getErrorMessage(err: any): string {
     // GraphQL errors (validation, business logic)
     if (err.graphQLErrors?.length > 0) {
         const messages = err.graphQLErrors.map((e: any) => e.message).join('. ')
-        if (messages.includes('unauthorized') || messages.includes('authentication')) {
+        if (
+            messages.includes('unauthorized') ||
+            messages.includes('authentication')
+        ) {
             return 'Please log in to publish.'
         }
         return messages
@@ -56,6 +61,7 @@ export default function Write() {
     const [image, setImage] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+    const isSubmitting = useRef(false)
 
     const [createPost, { loading: mutationLoading }] = useMutation(CREATE_POST)
 
@@ -73,6 +79,12 @@ export default function Write() {
     const handlePublish = async () => {
         const title = titleRef.current?.value
 
+        // prevent duplicate save
+        if (isSubmitting.current) {
+            console.log('Already submitting, ignoring duplicate click')
+            return
+        }
+
         if (!title || !content || content === '<p></p>') {
             alert('Please fill in both title and content')
             return
@@ -83,6 +95,7 @@ export default function Write() {
             return
         }
 
+        isSubmitting.current = true
         setLoading(true)
         setError('')
 
@@ -117,6 +130,7 @@ export default function Write() {
             console.error('GraphQL Errors:', err.graphQLErrors)
             console.error('Network Error:', err.networkError)
             setError(getErrorMessage(err))
+            isSubmitting.current = false
         } finally {
             setLoading(false)
         }
@@ -143,7 +157,7 @@ export default function Write() {
         'Tutorial',
         'Career',
         'DevOps',
-        "Other"
+        'Other',
     ]
 
     return (

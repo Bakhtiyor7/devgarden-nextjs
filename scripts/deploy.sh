@@ -1,14 +1,13 @@
 #!/bin/bash
 set -e
 
-SERVER="bahhtee@your_droplet_ip"
-APP_DIR="blog-frontend"
+SERVER="bahhtee@167.71.207.5"
+APP_DIR="devgarden-nextjs"
 
 echo "🔨 Building Next.js locally..."
 npm run build
 
 echo "📦 Creating deployment package..."
-# Only package what's needed to run
 tar -czf deploy-frontend.tar.gz \
   .next/ \
   public/ \
@@ -16,17 +15,24 @@ tar -czf deploy-frontend.tar.gz \
   package.json \
   package-lock.json \
   next.config.js \
-  ecosystem.config.js
+  ecosystem.config.js \
+  .env.production
 
 echo "📤 Uploading to server (this may take a few minutes)..."
 scp deploy-frontend.tar.gz $SERVER:~/
 
 echo "🚀 Deploying on server..."
-ssh $SERVER << 'ENDSSH'
-  cd ~/blog-frontend
+ssh $SERVER << ENDSSH
+  cd ~/$APP_DIR
   
   # Extract
   tar -xzf ~/deploy-frontend.tar.gz
+  
+  # Copy production env to .env
+  cp .env.production .env
+  
+  # Create logs directory if it doesn't exist
+  mkdir -p logs
   
   # Restart PM2
   pm2 restart blog-frontend 2>/dev/null || pm2 start ecosystem.config.js
